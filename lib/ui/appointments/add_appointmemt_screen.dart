@@ -42,14 +42,6 @@ class _AddAppointmentScreenState extends State<AddAppointmentScreen> {
     startTimeController = TextEditingController();
     notesController = TextEditingController();
   }
-
-  @override
-  void dispose() {
-    startTimeController.dispose();
-    notesController.dispose();
-    super.dispose();
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -119,7 +111,6 @@ class _AddAppointmentScreenState extends State<AddAppointmentScreen> {
               children: [
                 SizedBox(height: 16.h),
 
-                // DATE PICKER
                 GestureDetector(
                   onTap: () async {
                     final DateTime? pickedDate = await showDatePicker(
@@ -176,9 +167,7 @@ class _AddAppointmentScreenState extends State<AddAppointmentScreen> {
                     ),
                   ),
                 ),
-                SizedBox(height: 30.h),
-
-                // TIME SELECTION
+                SizedBox(height: 20.h),
                 Text(
                   'Select Time',
                   style: TextStyle(
@@ -189,7 +178,7 @@ class _AddAppointmentScreenState extends State<AddAppointmentScreen> {
                 ),
                 SizedBox(height: 12.h),
                 Wrap(
-                  spacing: 12.w,
+                  spacing: 7.w,
                   runSpacing: 12.h,
                   children: _availableTimes.map((time) {
                     final isSelected = _selectedTime == time;
@@ -231,9 +220,8 @@ class _AddAppointmentScreenState extends State<AddAppointmentScreen> {
                     );
                   }).toList(),
                 ),
-                SizedBox(height: 30.h),
+                SizedBox(height: 20.h),
 
-                // NOTES
                 Text(
                   'Notes',
                   style: TextStyle(
@@ -273,9 +261,8 @@ class _AddAppointmentScreenState extends State<AddAppointmentScreen> {
                     ),
                   ),
                 ),
-                SizedBox(height: 35.h),
+                SizedBox(height: 25.h),
 
-                // SUBMIT BUTTON
                 BlocBuilder<AppointmentBloc, AppointmentState>(
                   builder: (context, state) {
                     bool isLoading = state is AppointmentLoading;

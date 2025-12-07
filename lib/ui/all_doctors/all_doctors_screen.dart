@@ -7,11 +7,9 @@ import 'package:docdoc/logic/city/city_event.dart';
 import 'package:docdoc/logic/city/city_state.dart';
 import 'package:docdoc/logic/models/city_model.dart';
 import 'package:docdoc/ui/doctor_details/doctor_details_screen.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:skeletonizer/skeletonizer.dart';
 
 class AllDoctorsScreen extends StatefulWidget {
   const AllDoctorsScreen({super.key});
@@ -88,7 +86,6 @@ class _AllDoctorsScreenState extends State<AllDoctorsScreen> {
           margin: EdgeInsets.only(left: 18.w, top: 25.h, right: 18.w),
           child: Column(
             children: [
-              // 🔵 Cities Horizontal List
               BlocBuilder<CityBloc, CityState>(
                 builder: (context, state) {
                   if (state is CityLoading) {
@@ -150,14 +147,21 @@ class _AllDoctorsScreenState extends State<AllDoctorsScreen> {
 
 
                   }
-
-                  return const SizedBox.shrink();
+                  else if (state is CityError) {
+                    return Center(
+                      child: Text(
+                        "Error: ${state.message}",
+                        style: const TextStyle(color: Colors.red),
+                      ),
+                    );
+                  } else {
+                    return const Center(child: Text("Failed to load doctors"));
+                  }
                 },
               ),
 
               SizedBox(height: 20),
 
-              // 🔵 Doctors List (existing code — untouched)
               Expanded(
                 child: BlocBuilder<AllDoctorsBloc, AllDoctorsState>(
                   builder: (context, state) {
@@ -167,7 +171,6 @@ class _AllDoctorsScreenState extends State<AllDoctorsScreen> {
                       );
                     } else if (state is AllDoctorsSuccess) {
                       final doctors = state.doctors;
-
                       return ListView.builder(
                         itemCount: doctors.length,
                         itemBuilder: (context, int index) {

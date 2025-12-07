@@ -172,10 +172,10 @@ class AppointmentConfirmationScreen extends StatelessWidget {
 
               // Action Buttons
               AppTextButton(
-                buttonText: 'View My Appointments',
+                buttonText: 'Done',
                 textStyle: TextStyle(
                   color: Colors.white,
-                  fontSize: 16.sp,
+                  fontSize: 20.sp,
                   fontWeight: FontWeight.bold,
                 ),
                 onPressed: () {
@@ -186,22 +186,6 @@ class AppointmentConfirmationScreen extends StatelessWidget {
                 backgroundColor: MyColors.myBlue,
                 borderRadius: 16.r,
                 buttonHeight: 56.h,
-              ),
-              SizedBox(height: 16.h),
-              TextButton(
-                onPressed: () {
-                  // Same - go back to previous screens
-                  Navigator.pop(context);
-                  Navigator.pop(context);
-                },
-                child: Text(
-                  'Back to Home',
-                  style: TextStyle(
-                    color: MyColors.myBlue,
-                    fontSize: 16.sp,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
               ),
             ],
           ),

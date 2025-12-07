@@ -10,7 +10,6 @@ class PrefHelper {
 
   static Future<String?> getToken() async {
     final prefs = await SharedPreferences.getInstance();
-    prefs.getString(_tokenKey);
     return prefs.getString(_tokenKey);
   }
 
