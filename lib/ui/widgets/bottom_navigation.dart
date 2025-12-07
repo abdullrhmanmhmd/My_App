@@ -1,9 +1,9 @@
 import 'package:docdoc/core/constants/my_colors.dart';
 import 'package:docdoc/logic/models/user_model.dart';
+import 'package:docdoc/ui/appointments/appointmemt_screen.dart';
 import 'package:docdoc/ui/home/home_screen.dart';
 import 'package:docdoc/ui/profile/profile_screen.dart';
 import 'package:docdoc/ui/profile/update_profile_screen.dart';
-import 'package:docdoc/ui/screens/appointmemt_screen.dart';
 import 'package:docdoc/ui/screens/search_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';

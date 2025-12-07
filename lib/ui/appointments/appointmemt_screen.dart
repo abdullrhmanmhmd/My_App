@@ -54,15 +54,14 @@ class AppointmemtScreen extends StatelessWidget {
                 if (appointments.isEmpty) {
                   return Center(
                     child: Padding(
-                      padding: const EdgeInsets.only(bottom:110.0),
-                      child: Text("No appointments found",style:TextStyle(
-                        fontSize: 16.0,
-                        fontWeight: FontWeight.w500,
-                        color: MyColors.myGrey,
-
-                      )),
+                      padding: const EdgeInsets.only(bottom: 110.0),
+                      child: Text("No appointments found",
+                          style: TextStyle(
+                            fontSize: 16.0,
+                            fontWeight: FontWeight.w500,
+                            color: MyColors.myGrey,
+                          )),
                     ),
-
                   );
                 }
 
@@ -72,76 +71,83 @@ class AppointmemtScreen extends StatelessWidget {
                     final appt = appointments[index];
 
                     return Container(
-                      width: double.infinity,
-                      padding: EdgeInsets.all(12.w),
-                      margin: EdgeInsets.only(bottom: 12.h),
+                      margin: EdgeInsets.only(bottom: 16.h),
                       decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(16),
-                        color: const Color(0xFFF7F7F7),
-                      ),
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          SizedBox(width: 16.w),
-
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  appt.doctor?.name ?? "Unknown Doctor",
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 16.sp,
-                                    color: MyColors.myBlack,
-                                  ),
-                                ),
-
-                                SizedBox(height: 4.h),
-
-                                Text(
-                                  appt.doctor?.specialization?.name ??
-                                      "No Specialization",
-                                  style: TextStyle(
-                                    color: MyColors.myGrey,
-                                    fontSize: 13.sp,
-                                  ),
-                                ),
-
-                                SizedBox(height: 6.h),
-
-                                Text(
-                                  "Time: ${appt.appointmentTime ?? "--"}",
-                                  style: TextStyle(
-                                    color: MyColors.myBlack,
-                                    fontSize: 13.sp,
-                                  ),
-                                ),
-
-                                SizedBox(height: 4.h),
-
-                                Text(
-                                  "Status: ${appt.status ?? "N/A"}",
-                                  style: TextStyle(
-                                    color: MyColors.myGrey,
-                                    fontSize: 13.sp,
-                                  ),
-                                ),
-
-                                SizedBox(height: 4.h),
-                                Text(
-                                  "Notes: ${appt.notes ?? "N/A"}",
-
-                                  style: TextStyle(
-                                    color: MyColors.myGrey,
-                                    fontSize: 13.sp,
-                                  ),
-                                ),
-
-                              ],
-                            ),
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(16.r),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withOpacity(0.05),
+                            blurRadius: 10,
+                            offset: const Offset(0, 2),
                           ),
                         ],
+                      ),
+                      child: Padding(
+                        padding: EdgeInsets.all(16.w),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                CircleAvatar(
+                                  radius: 35.r,
+                                  backgroundColor: MyColors.myBlue.withOpacity(0.1),
+                                  child: Icon(Icons.person, size: 35.sp, color: MyColors.myBlue),
+                                ),
+                                SizedBox(width: 16.w),
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        appt.doctor?.name ?? "Unknown Doctor",
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 16.sp,
+                                          color: MyColors.myBlack,
+                                        ),
+                                      ),
+                                      SizedBox(height: 4.h),
+                                      Text(
+                                        appt.doctor?.specialization?.name ?? "No Specialization",
+                                        style: TextStyle(
+                                          color: MyColors.myGrey,
+                                          fontSize: 13.sp,
+                                        ),
+                                      ),
+                                      SizedBox(height: 6.h),
+                                      Text(
+                                        "Time: ${appt.appointmentTime ?? "--"}",
+                                        style: TextStyle(
+                                          color: MyColors.myBlack,
+                                          fontSize: 13.sp,
+                                        ),
+                                      ),
+                                      SizedBox(height: 4.h),
+                                      Text(
+                                        "Status: ${appt.status ?? "N/A"}",
+                                        style: TextStyle(
+                                          color: MyColors.myGrey,
+                                          fontSize: 13.sp,
+                                        ),
+                                      ),
+                                      SizedBox(height: 4.h),
+                                      Text(
+                                        "Notes: ${appt.notes ?? "N/A"}",
+                                        style: TextStyle(
+                                          color: MyColors.myGrey,
+                                          fontSize: 13.sp,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
                       ),
                     );
                   },

@@ -6,7 +6,6 @@ import 'package:docdoc/ui/doctor_details/doctor_details_screen.dart';
 import 'package:docdoc/ui/login/login_screen.dart';
 import 'package:docdoc/ui/on_boarding/onboarding_screen.dart';
 import 'package:docdoc/ui/profile/update_profile_screen.dart';
-import 'package:docdoc/ui/screens/add_appointmemt_screen.dart';
 
 // import 'package:docdoc/ui/screens/all_doctors_screen.dart';
 // import 'package:docdoc/ui/screens/profile_screen.dart';

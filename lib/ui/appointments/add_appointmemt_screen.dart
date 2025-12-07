@@ -3,6 +3,7 @@ import 'package:docdoc/logic/add_appointment/add_appointment_bloc.dart';
 import 'package:docdoc/logic/add_appointment/add_appointment_event.dart';
 import 'package:docdoc/logic/add_appointment/add_appointment_state.dart';
 import 'package:docdoc/logic/models/add_appointment_model.dart';
+import 'package:docdoc/ui/appointments/appointment_confirmation.dart';
 import 'package:docdoc/ui/widgets/app_text_button.dart';
 import 'package:docdoc/ui/widgets/custom_snack.dart';
 import 'package:flutter/material.dart';
@@ -21,6 +22,19 @@ class AddAppointmentScreen extends StatefulWidget {
 class _AddAppointmentScreenState extends State<AddAppointmentScreen> {
   late TextEditingController startTimeController;
   late TextEditingController notesController;
+  String? _selectedTime;
+
+  final List<String> _availableTimes = [
+    '09:00 AM',
+    '10:00 AM',
+    '11:00 AM',
+    '12:00 PM',
+    '01:00 PM',
+    '02:00 PM',
+    '03:00 PM',
+    '04:00 PM',
+    '05:00 PM',
+  ];
 
   @override
   void initState() {
@@ -70,58 +84,49 @@ class _AddAppointmentScreenState extends State<AddAppointmentScreen> {
       body: BlocListener<AppointmentBloc, AppointmentState>(
         listener: (context, state) {
           if (state is AppointmentSuccess) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              customSnack(
-                'Appointment booked successfully',
-                backgroundColor: Colors.green,
-                icon: Icons.check_circle,
+            final appointment = AddAppointment(
+              doctorId: widget.doctorId,
+              startTime: startTimeController.text.trim(),
+              notes: notesController.text.trim(),
+            );
+
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                builder: (context) => AppointmentConfirmationScreen(
+                  appointment: appointment,
+                ),
               ),
             );
-            Navigator.pop(context);
           }
 
           if (state is AppointmentError) {
-            ScaffoldMessenger.of(
-              context,
-            ).showSnackBar(SnackBar(content: Text(state.message)));
-            Navigator.pop(context);
+            ScaffoldMessenger.of(context).showSnackBar(
+              customSnack(
+                state.message,
+                backgroundColor: Colors.red,
+                icon: Icons.error,
+              ),
+            );
           }
         },
-        child: Container(
-          width: double.infinity,
-          margin: EdgeInsets.only(left: 20.w, right: 20.w, top: 25.h),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              SizedBox(height: 16.h),
+        child: SingleChildScrollView(
+          child: Container(
+            width: double.infinity,
+            margin: EdgeInsets.only(left: 20.w, right: 20.w, top: 25.h),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SizedBox(height: 16.h),
 
-              // DATE PICKER
-              GestureDetector(
-                onTap: () async {
-                  final DateTime? pickedDate = await showDatePicker(
-                    context: context,
-                    initialDate: DateTime.now(),
-                    firstDate: DateTime.now(),
-                    lastDate: DateTime(2100),
-                    builder: (context, child) {
-                      return Theme(
-                        data: Theme.of(context).copyWith(
-                          colorScheme: ColorScheme.light(
-                            primary: MyColors.myBlue, // Header & selected color
-                            onPrimary: Colors.white, // Text on header
-                            onSurface: MyColors.myBlue, // Body text
-                          ),
-                        ),
-                        child: child!,
-                      );
-                    },
-                  );
-
-                  if (pickedDate != null) {
-                    final TimeOfDay? pickedTime = await showTimePicker(
+                // DATE PICKER
+                GestureDetector(
+                  onTap: () async {
+                    final DateTime? pickedDate = await showDatePicker(
                       context: context,
-                      initialTime: TimeOfDay.now(),
-                      initialEntryMode: TimePickerEntryMode.input,
+                      initialDate: DateTime.now(),
+                      firstDate: DateTime.now(),
+                      lastDate: DateTime(2100),
                       builder: (context, child) {
                         return Theme(
                           data: Theme.of(context).copyWith(
@@ -136,127 +141,191 @@ class _AddAppointmentScreenState extends State<AddAppointmentScreen> {
                       },
                     );
 
-                    if (pickedTime != null) {
-                      final combined = DateTime(
-                        pickedDate.year,
-                        pickedDate.month,
-                        pickedDate.day,
-                        pickedTime.hour,
-                        pickedTime.minute,
-                      );
-
-                      startTimeController.text = combined.toString().substring(
-                        0,
-                        16,
-                      );
+                    if (pickedDate != null) {
+                      setState(() {
+                        startTimeController.text =
+                        '${pickedDate.year}-${pickedDate.month.toString().padLeft(2, '0')}-${pickedDate.day.toString().padLeft(2, '0')}';
+                      });
                     }
-                  }
-                },
-                child: AbsorbPointer(
-                  child: TextField(
-                    controller: startTimeController,
-                    decoration: InputDecoration(
-                      labelText: "Start Time (YYYY-MM-DD HH:mm)",
-
-                      labelStyle: const TextStyle(color: Colors.grey),
-
-                      floatingLabelStyle: TextStyle(
-                        color: MyColors.myBlue,
-                        fontWeight: FontWeight.w600,
-                      ),
-
-                      enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12),
-                        borderSide: const BorderSide(
-                          color: Colors.grey,
-                          width: 1.5,
-                        ),
-                      ),
-
-                      focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12),
-                        borderSide: BorderSide(
+                  },
+                  child: AbsorbPointer(
+                    child: TextField(
+                      controller: startTimeController,
+                      decoration: InputDecoration(
+                        labelText: "Select Date (YYYY-MM-DD)",
+                        labelStyle: const TextStyle(color: Colors.grey),
+                        floatingLabelStyle: TextStyle(
                           color: MyColors.myBlue,
-                          width: 2,
+                          fontWeight: FontWeight.w600,
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                          borderSide: const BorderSide(
+                            color: Colors.grey,
+                            width: 1.5,
+                          ),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                          borderSide: BorderSide(
+                            color: MyColors.myBlue,
+                            width: 2,
+                          ),
                         ),
                       ),
                     ),
                   ),
                 ),
-              ),
-              SizedBox(height: 16.h),
+                SizedBox(height: 30.h),
 
-              SizedBox(height: 16.h),
-
-              TextField(
-                controller: notesController,
-                maxLines: 3,
-                decoration: InputDecoration(
-                  labelText: "Notes",
-
-                  labelStyle: TextStyle(
-                    color: Colors.grey,
-                    fontWeight: FontWeight.w600,
-                    fontSize: 16.sp,
-                  ),
-
-                  floatingLabelStyle: TextStyle(
+                // TIME SELECTION
+                Text(
+                  'Select Time',
+                  style: TextStyle(
+                    fontSize: 18.sp,
+                    fontWeight: FontWeight.bold,
                     color: MyColors.myBlue,
-                    fontWeight: FontWeight.w600,
-                  ),
-
-                  enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                    borderSide: const BorderSide(
-                      color: Colors.grey,
-                      width: 1.5,
-                    ),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                    borderSide: BorderSide(color: MyColors.myBlue, width: 2),
                   ),
                 ),
-              ),
-              SizedBox(height: 35.h),
-              BlocBuilder<AppointmentBloc, AppointmentState>(
-                builder: (context, state) {
-                  bool isLoading = state is AppointmentLoading;
-                  return isLoading
-                      ? Center(
-                          child: CircularProgressIndicator(
-                            color: MyColors.myBlue,
-                            strokeWidth: 2,
-                            backgroundColor: MyColors.myWhite,
+                SizedBox(height: 12.h),
+                Wrap(
+                  spacing: 12.w,
+                  runSpacing: 12.h,
+                  children: _availableTimes.map((time) {
+                    final isSelected = _selectedTime == time;
+                    return GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          _selectedTime = time;
+                        });
+                      },
+                      child: Container(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 20.w,
+                          vertical: 12.h,
+                        ),
+                        decoration: BoxDecoration(
+                          color: isSelected
+                              ? MyColors.myBlue
+                              : Colors.grey.shade100,
+                          borderRadius: BorderRadius.circular(12.r),
+                          border: Border.all(
+                            color: isSelected
+                                ? MyColors.myBlue
+                                : Colors.grey.shade300,
+                            width: 2,
                           ),
-                        )
-                      : AppTextButton(
-                          buttonText: "Submit",
-                          textStyle: TextStyle(
-                            fontSize: 16.sp,
-                            fontWeight: FontWeight.w600,
-                            color: MyColors.myWhite,
+                        ),
+                        child: Text(
+                          time,
+                          style: TextStyle(
+                            fontSize: 14.sp,
+                            color:
+                            isSelected ? Colors.white : MyColors.myGrey,
+                            fontWeight: isSelected
+                                ? FontWeight.bold
+                                : FontWeight.normal,
                           ),
-                          onPressed: () {
-                            if (startTimeController.text.isEmpty) {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                customSnack('Please select a start time'),
-                              );
-                              return;
-                            }
-                            final request = AddAppointment(
-                              doctorId: widget.doctorId,
-                              startTime: startTimeController.text.trim(),
-                              notes: notesController.text.trim(),
-                            );
-                            context.read<AppointmentBloc>().add(
-                              StoreAppointmentEvent(request),
-                            );
-                          },
+                        ),
+                      ),
+                    );
+                  }).toList(),
+                ),
+                SizedBox(height: 30.h),
+
+                // NOTES
+                Text(
+                  'Notes',
+                  style: TextStyle(
+                    fontSize: 18.sp,
+                    fontWeight: FontWeight.bold,
+                    color: MyColors.myBlue,
+                  ),
+                ),
+                SizedBox(height: 12.h),
+                TextField(
+                  controller: notesController,
+                  maxLines: 3,
+                  decoration: InputDecoration(
+                    labelText: "Additional Notes (Optional)",
+                    labelStyle: TextStyle(
+                      color: Colors.grey,
+                      fontWeight: FontWeight.w600,
+                      fontSize: 14.sp,
+                    ),
+                    floatingLabelStyle: TextStyle(
+                      color: MyColors.myBlue,
+                      fontWeight: FontWeight.w600,
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                      borderSide: const BorderSide(
+                        color: Colors.grey,
+                        width: 1.5,
+                      ),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                      borderSide: BorderSide(
+                        color: MyColors.myBlue,
+                        width: 2,
+                      ),
+                    ),
+                  ),
+                ),
+                SizedBox(height: 35.h),
+
+                // SUBMIT BUTTON
+                BlocBuilder<AppointmentBloc, AppointmentState>(
+                  builder: (context, state) {
+                    bool isLoading = state is AppointmentLoading;
+                    return isLoading
+                        ? Center(
+                      child: CircularProgressIndicator(
+                        color: MyColors.myBlue,
+                        strokeWidth: 2,
+                        backgroundColor: MyColors.myWhite,
+                      ),
+                    )
+                        : AppTextButton(
+                      buttonText: "Submit",
+                      textStyle: TextStyle(
+                        fontSize: 16.sp,
+                        fontWeight: FontWeight.w600,
+                        color: MyColors.myWhite,
+                      ),
+                      onPressed: () {
+                        if (startTimeController.text.isEmpty) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            customSnack('Please select a date'),
+                          );
+                          return;
+                        }
+                        if (_selectedTime == null) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            customSnack('Please select a time'),
+                          );
+                          return;
+                        }
+
+                        final dateTimeString =
+                            '${startTimeController.text} ${_selectedTime!}';
+
+                        final request = AddAppointment(
+                          doctorId: widget.doctorId,
+                          startTime: dateTimeString,
+                          notes: notesController.text.trim(),
                         );
-                },
-              ),
-            ],
+                        context.read<AppointmentBloc>().add(
+                          StoreAppointmentEvent(request),
+                        );
+                      },
+                    );
+                  },
+                ),
+                SizedBox(height: 20.h),
+              ],
+            ),
           ),
         ),
       ),
