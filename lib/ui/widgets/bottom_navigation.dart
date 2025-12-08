@@ -29,10 +29,10 @@ class _BottomNavigationWidgetState extends State<BottomNavigationWidget> {
     pageController = PageController(initialPage: currentScreen);
 
     screens = [
-      HomeScreen(userModel: widget.userModel),
-      const SearchScreen(),
-       AppointmemtScreen(),
-       ProfileScreen(),
+        HomeScreen(userModel: widget.userModel),
+        SearchScreen(),
+        AppointmemtScreen(),
+        ProfileScreen(),
     ];
   }
 
