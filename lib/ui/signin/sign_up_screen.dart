@@ -2,11 +2,9 @@ import 'package:docdoc/core/constants/my_colors.dart';
 import 'package:docdoc/core/network/api_error.dart';
 import 'package:docdoc/logic/auth/auth_repo.dart';
 import 'package:docdoc/logic/models/user_model.dart';
-// import 'package:docdoc/logic/auth/user_model.dart';
 import 'package:docdoc/ui/signin/widgets/signin_terms_and_conditions_text.dart';
 import 'package:docdoc/ui/widgets/app_text_button.dart';
 import 'package:docdoc/ui/widgets/app_text_form_field.dart';
-
 import 'package:docdoc/ui/widgets/bottom_navigation.dart';
 import 'package:docdoc/ui/widgets/custom_snack.dart';
 import 'package:flutter/material.dart';
